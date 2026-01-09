@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, Link } from 'react-router-dom';
-import { FiMail, FiLock, FiUser, FiShield, FiBriefcase } from 'react-icons/fi';
+import { FiMail, FiLock, FiUser, FiShield, FiBriefcase, FiEye, FiEyeOff } from 'react-icons/fi';
 import api from '../../lib/api';
 import { useAuth } from '../../context/AuthContext';
 import toast from 'react-hot-toast';
@@ -11,6 +11,8 @@ export default function Register() {
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
     const navigate = useNavigate();
     const { setAuth } = useAuth();
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const password = watch('password');
 
@@ -96,7 +98,10 @@ export default function Register() {
                                     className={`w-full bg-white/5 border ${errors.email ? 'border-red-500' : 'border-white/20'} text-white rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all placeholder-gray-500`}
                                     {...register('email', {
                                         required: 'Email is required',
-                                        pattern: { value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, message: 'Invalid email' }
+                                        pattern: {
+                                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                            message: "Invalid email address. Must contain '@' and valid domain"
+                                        }
                                     })}
                                 />
                             </div>
@@ -129,14 +134,25 @@ export default function Register() {
                                     <FiLock className="text-gray-500" />
                                 </div>
                                 <input
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     placeholder="••••••••"
-                                    className={`w-full bg-white/5 border ${errors.password ? 'border-red-500' : 'border-white/20'} text-white rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all placeholder-gray-500`}
+                                    className={`w-full bg-white/5 border ${errors.password ? 'border-red-500' : 'border-white/20'} text-white rounded-lg pl-10 pr-12 py-3 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all placeholder-gray-500`}
                                     {...register('password', {
                                         required: 'Required',
-                                        minLength: { value: 6, message: 'Min 6 chars' }
+                                        minLength: { value: 8, message: 'Min 8 chars' },
+                                        pattern: {
+                                            value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                                            message: 'Must contain uppercase, lowercase, number & special char'
+                                        }
                                     })}
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-300 focus:outline-none"
+                                >
+                                    {showPassword ? <FiEyeOff /> : <FiEye />}
+                                </button>
                             </div>
                             {errors.password && <p className="text-red-400 text-sm mt-1 ml-1">{errors.password.message}</p>}
                         </div>
@@ -148,13 +164,20 @@ export default function Register() {
                                     <FiLock className="text-gray-500" />
                                 </div>
                                 <input
-                                    type="password"
+                                    type={showConfirmPassword ? "text" : "password"}
                                     placeholder="••••••••"
-                                    className={`w-full bg-white/5 border ${errors.confirmPassword ? 'border-red-500' : 'border-white/20'} text-white rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all placeholder-gray-500`}
+                                    className={`w-full bg-white/5 border ${errors.confirmPassword ? 'border-red-500' : 'border-white/20'} text-white rounded-lg pl-10 pr-12 py-3 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all placeholder-gray-500`}
                                     {...register('confirmPassword', {
                                         validate: val => val === password || 'Passwords do not match'
                                     })}
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-300 focus:outline-none"
+                                >
+                                    {showConfirmPassword ? <FiEyeOff /> : <FiEye />}
+                                </button>
                             </div>
                             {errors.confirmPassword && <p className="text-red-400 text-sm mt-1 ml-1">{errors.confirmPassword.message}</p>}
                         </div>
