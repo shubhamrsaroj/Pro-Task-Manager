@@ -37,7 +37,7 @@ const io = new Server(httpServer, {
             const allowedOrigins = [
                 'http://localhost:3000',
                 'http://localhost:5173',
-                'https://taskmanagerpr.netlify.app'
+                'https://taskmanagerpros.netlify.app'
             ];
 
             if (allowedOrigins.indexOf(normalizedOrigin) !== -1 || !origin) {
@@ -62,7 +62,7 @@ app.use(cors({
         const allowedOrigins = [
             'http://localhost:3000',
             'http://localhost:5173',
-            'https://taskmanagerpr.netlify.app'
+            'https://taskmanagerpros.netlify.app'
         ];
 
         if (allowedOrigins.indexOf(normalizedOrigin) !== -1 || !origin) {
